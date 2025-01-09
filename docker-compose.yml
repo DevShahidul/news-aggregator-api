@@ -103,6 +103,33 @@ services:
             - "6379:6379"
         networks:
             - laravel
+
+    ####################################################################################################
+    # Meilisearch
+    ####################################################################################################
+    meilisearch:
+        image: getmeili/meilisearch:latest
+        container_name: meilisearch-news-aggregator
+        restart: unless-stopped
+        environment:
+            - MEILI_MASTER_KEY=${MEILI_MASTER_KEY:-masterKey}
+            - MEILI_NO_ANALYTICS=true
+            - MEILI_ENV=development
+        ports:
+            - "7700:7700"
+        volumes:
+            - meilisearch-data:/meili_data
+        networks:
+            - laravel
+
 networks:
     laravel:
         driver: bridge
+
+volumes:
+    mysql-data:
+        driver: local
+    redis-data:
+        driver: local
+    meilisearch-data:
+        driver: local

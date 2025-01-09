@@ -7,14 +7,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
-use App\Observers\ArticleObserver;
+use Laravel\Scout\Searchable;
 
-#[ObservedBy([ArticleObserver::class])]
 class Article extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $fillable = [
         'title',
@@ -22,16 +19,14 @@ class Article extends Model
         'url',
         'image_url',
         'published_at',
+        'author',
         'source_id',
         'category_id',
-        'author',
-        'is_featured',
         'status',
     ];
 
     protected $casts = [
         'published_at' => 'datetime',
-        'is_featured' => 'boolean',
         'status' => 'string',
     ];
 
@@ -45,13 +40,46 @@ class Article extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function scopePublished(Builder $query): Builder
+    public function scopePublished($query)
     {
         return $query->where('status', 'published');
     }
 
-    public function scopeFeatured(Builder $query): Builder
+    public function scopeFeatured($query)
     {
         return $query->where('is_featured', true);
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     */
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'content' => $this->content,
+            'author' => $this->author,
+            'source' => $this->source?->name,
+            'category' => $this->category?->name,
+            'published_at' => $this->published_at?->timestamp,
+            'status' => $this->status,
+        ];
+    }
+
+    /**
+     * Get the value used to index the model.
+     */
+    public function getScoutKey(): mixed
+    {
+        return $this->id;
+    }
+
+    /**
+     * Get the key name used to index the model.
+     */
+    public function getScoutKeyName(): mixed
+    {
+        return 'id';
     }
 } 

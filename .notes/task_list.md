@@ -6,8 +6,8 @@
 - [x] Implement core authentication system. (**Status:** Completed, **Notes:** Using Laravel Sanctum with API tokens)
 
 ## High Priority
-- [ ] Develop news API integration system. (**Status:** To Do, **Notes:** Start with NewsAPI integration)
-- [ ] Create article storage and indexing system. (**Status:** To Do, **Notes:** Implement efficient search indexing)
+- [x] Develop news API integration system. (**Status:** Completed, **Notes:** Implemented NewsAPI integration with caching)
+- [ ] Create article storage and indexing system. (**Status:** In Progress, **Notes:** Basic storage implemented, indexing pending)
 - [ ] Build user preference management system. (**Status:** To Do, **Notes:** Include source and category preferences)
 - [ ] Implement scheduled article fetching. (**Status:** To Do, **Notes:** Use Laravel's scheduler)
 - [ ] Set up API documentation with OpenAPI. (**Status:** To Do, **Notes:** Include all endpoints and response formats)
@@ -44,3 +44,4 @@
 - [x] Set up Docker development environment
 - [x] Design and implement database schema
 - [x] Implement core authentication system
+- [x] Develop news API integration system
