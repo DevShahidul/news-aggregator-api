@@ -46,4 +46,9 @@ class Source extends Model
     {
         return $query->where('is_active', true);
     }
+
+    public function scopeOrdered(Builder $query): Builder
+    {
+        return $query->orderBy('name');
+    }
 } 

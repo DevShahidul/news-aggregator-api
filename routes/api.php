@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\UserPreferenceController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SourceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,12 +35,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
     Route::get('/user', [AuthController::class, 'user'])->name('auth.user');
 
+    // User preferences routes
+    Route::prefix('preferences')->group(function () {
+        Route::get('/', [UserPreferenceController::class, 'index'])->name('preferences.index');
+        Route::post('/', [UserPreferenceController::class, 'store'])->name('preferences.store');
+        Route::delete('/{preference}', [UserPreferenceController::class, 'destroy'])->name('preferences.destroy');
+        Route::post('/bulk', [UserPreferenceController::class, 'bulkUpdate'])->name('preferences.bulk-update');
+    });
+
     // Categories routes
-    // TODO: Add category routes
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 
     // Sources routes
-    // TODO: Add source routes
-
-    // User preferences routes
-    // TODO: Add user preference routes
+    Route::get('/sources', [SourceController::class, 'index'])->name('sources.index');
 }); 

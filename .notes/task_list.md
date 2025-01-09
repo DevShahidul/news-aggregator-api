@@ -7,13 +7,13 @@
 
 ## High Priority
 - [x] Develop news API integration system. (**Status:** Completed, **Notes:** Implemented NewsAPI integration with caching)
-- [ ] Create article storage and indexing system. (**Status:** In Progress, **Notes:** Basic storage implemented, indexing pending)
+- [x] Create article storage and indexing system. (**Status:** Completed, **Notes:** Implemented with Meilisearch)
+- [x] Implement article search functionality. (**Status:** Completed, **Notes:** Using Meilisearch with filters)
+- [x] Implement scheduled article fetching. (**Status:** Completed, **Notes:** Hourly fetching with cleanup)
 - [ ] Build user preference management system. (**Status:** To Do, **Notes:** Include source and category preferences)
-- [ ] Implement scheduled article fetching. (**Status:** To Do, **Notes:** Use Laravel's scheduler)
 - [ ] Set up API documentation with OpenAPI. (**Status:** To Do, **Notes:** Include all endpoints and response formats)
 
 ## Medium Priority
-- [ ] Implement article search functionality. (**Status:** To Do, **Notes:** Include filtering by multiple parameters)
 - [ ] Create caching system. (**Status:** To Do, **Notes:** Use Redis for performance optimization)
 - [ ] Develop personalized feed algorithm. (**Status:** To Do, **Notes:** Based on user preferences and behavior)
 - [ ] Set up rate limiting system. (**Status:** To Do, **Notes:** Protect API endpoints)
@@ -45,3 +45,6 @@
 - [x] Design and implement database schema
 - [x] Implement core authentication system
 - [x] Develop news API integration system
+- [x] Create article storage and indexing system
+- [x] Implement article search functionality
+- [x] Implement scheduled article fetching
