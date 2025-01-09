@@ -64,6 +64,8 @@ class Article extends Model
             'category' => $this->category?->name,
             'published_at' => $this->published_at?->timestamp,
             'status' => $this->status,
+            'source_id' => $this->source_id,
+            'category_id' => $this->category_id,
         ];
     }
 
@@ -81,5 +83,39 @@ class Article extends Model
     public function getScoutKeyName(): mixed
     {
         return 'id';
+    }
+
+    /**
+     * Configure the searchable settings.
+     */
+    public function searchableAs(): string
+    {
+        return 'articles';
+    }
+
+    /**
+     * Get the indexable settings for the model.
+     */
+    public function searchableSettings(): array
+    {
+        return [
+            'filterableAttributes' => [
+                'source_id',
+                'category_id',
+                'status',
+                'published_at',
+            ],
+            'sortableAttributes' => [
+                'published_at',
+                'id',
+            ],
+            'searchableAttributes' => [
+                'title',
+                'content',
+                'author',
+                'source',
+                'category',
+            ],
+        ];
     }
 } 

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Article;
+
 return [
 
     /*
@@ -132,11 +134,27 @@ return [
 
     'meilisearch' => [
         'host' => env('MEILISEARCH_HOST', 'http://localhost:7700'),
-        'key' => env('MEILISEARCH_KEY'),
+        'key' => env('MEILISEARCH_KEY', null),
         'index-settings' => [
-            // 'users' => [
-            //     'filterableAttributes'=> ['id', 'name', 'email'],
-            // ],
+            Article::class => [
+                'filterableAttributes' => [
+                    'source_id',
+                    'category_id',
+                    'status',
+                    'published_at',
+                ],
+                'sortableAttributes' => [
+                    'published_at',
+                    'id',
+                ],
+                'searchableAttributes' => [
+                    'title',
+                    'content',
+                    'author',
+                    'source',
+                    'category',
+                ],
+            ],
         ],
     ],
 

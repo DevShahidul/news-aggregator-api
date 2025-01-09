@@ -18,28 +18,17 @@ class ArticleController extends Controller
     public function index(Request $request): JsonResponse
     {
         $perPage = $request->per_page ?? 15;
+        $query = $request->query('query');
+
+        if ($query || $request->has(['category_id', 'source_id'])) {
+            return $this->search($request);
+        }
         
         $articles = Article::query()
-            ->when($request->category_id, fn($query) => $query->where('category_id', $request->category_id))
-            ->when($request->source_id, fn($query) => $query->where('source_id', $request->source_id))
             ->published()
-            ->latest('published_at');
-
-        // If there are no articles, return an empty paginated response
-        if ($articles->count() === 0) {
-            return response()->json([
-                'data' => [],
-                'total' => 0,
-                'per_page' => $perPage,
-                'current_page' => 1,
-                'last_page' => 1,
-                'from' => null,
-                'to' => null,
-            ]);
-        }
-
-        // Load relationships only if there are articles
-        $articles = $articles->with(['source', 'category'])->paginate($perPage);
+            ->latest('published_at')
+            ->with(['source', 'category'])
+            ->paginate($perPage);
 
         return response()->json($articles);
     }
@@ -52,26 +41,31 @@ class ArticleController extends Controller
 
     public function search(Request $request): JsonResponse
     {
-        $request->validate([
-            'query' => ['required', 'string', 'min:3'],
-            'per_page' => ['sometimes', 'integer', 'min:1', 'max:50'],
-        ]);
+        $perPage = $request->per_page ?? 15;
+        $query = $request->query('query');
 
-        $articles = Article::search($request->query('query'))
-            ->when($request->category_id, function ($query) use ($request) {
-                $query->where('category_id', $request->category_id);
-            })
-            ->when($request->source_id, function ($query) use ($request) {
-                $query->where('source_id', $request->source_id);
-            })
-            ->when($request->from_date, function ($query) use ($request) {
-                $query->where('published_at', '>=', $request->from_date);
-            })
-            ->when($request->to_date, function ($query) use ($request) {
-                $query->where('published_at', '<=', $request->to_date);
-            })
+        $searchQuery = Article::search($query)
+            ->where('status', 'published');
+
+        if ($request->category_id) {
+            $searchQuery->where('category_id', $request->category_id);
+        }
+
+        if ($request->source_id) {
+            $searchQuery->where('source_id', $request->source_id);
+        }
+
+        if ($request->from_date) {
+            $searchQuery->where('published_at', '>=', strtotime($request->from_date));
+        }
+
+        if ($request->to_date) {
+            $searchQuery->where('published_at', '<=', strtotime($request->to_date));
+        }
+
+        $articles = $searchQuery
             ->orderBy($request->sort_by ?? 'published_at', $request->sort_direction ?? 'desc')
-            ->paginate($request->per_page ?? 15);
+            ->paginate($perPage);
 
         return response()->json($articles);
     }
